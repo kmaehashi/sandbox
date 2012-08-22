@@ -1,1 +1,1 @@
-class K{static void K(int s,int d,int t,String f){int S=100,n=t*10+d++,a=s+n,b=s-n;if(d!=10){K(s,d,n,f);K(a,d,0,f+'+'+n);K(b,d,0,f+'-'+n);}else{System.out.print(f.equals(f+=(a==S)?'+':(b==S)?'-':"")?"":f+n+'='+S+'\n');}}public static void main(String[]v){K(0,1,0,"");}}
+class K{static void K(int s,int d,int t,String f){int n=t*10+d++,a=s+n,b=s-n;if(d!=10){K(s,d,n,f);K(a,d,0,f+'+'+n);K(b,d,0,f+'-'+n);}else{System.out.print(f.equals(f+=a==100?'+':b==100?'-':"")?"":f+n+"=100\n");}}static{K(0,1,0,"");}}
