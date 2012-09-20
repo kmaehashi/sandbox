@@ -1,1 +1,1 @@
-class K{static void K(int s,int d,int t,String f){int n=t*10+d++,a=s+n,b=s-n;if(d!=10){K(s,d,n,f);K(a,d,0,f+'+'+n);K(b,d,0,f+'-'+n);}else{System.out.print(f.equals(f+=a==100?'+':b==100?'-':"")?"":f+n+"=100\n");}}static{K(0,1,0,"");}}
+enum K{_;{System.out.print(_(0,1,1,""));}String _(int S,int I,int _,String $){return(++I>9)?$==($=S+_==100?$+'+':S-_==100?$+'-':$)?"":$+_+"=100\n":_(S,I,_*10+I,$)+_(S+_,I,I,$+'+'+_)+_(S-_,I,I,$+'-'+_);}}
