@@ -1,0 +1,62 @@
+--- glastree.orig	2010-07-11 03:15:21.000000000 +0900
++++ glastree	2010-08-10 06:48:44.000000000 +0900
+@@ -23,7 +23,7 @@
+ # some globals & option vars
+ use vars qw/ $source $target $today $yesterday @prunedirs /;
+ 
+-use vars qw/ $opt_usehourminute $opt_today $opt_yesterday /;
++use vars qw/ $opt_usehourminute $opt_today $opt_yesterday @opt_exclude /;
+ use vars qw/ $opt_help $opt_version /;
+ 
+ my $version = "glastree v1.03 stable, http://igmus.org/code/\n";
+@@ -36,7 +36,7 @@
+     # handle options
+     #
+ 
+-    GetOptions ('today=s', 'yesterday=s', 'version', 'help'); #, 'usehourminute!');
++    GetOptions ('today=s', 'yesterday=s', 'version', 'exclude=s@', 'help'); #, 'usehourminute!');
+     
+     if ($opt_version)  { print STDERR $version; exit 1; }
+ 
+@@ -47,6 +47,7 @@
+ 	#print STDERR "  --usehourminute      Use hour/minute in directory names, suppress per diem\n";
+ 	print STDERR "  --today=path         Use path instead of today's date (YYYYMM/DD)\n";
+ 	print STDERR "  --yesterday=path     Use path instead of yesterday's date (YYYYMM/DD)\n";
++	print STDERR "  --exclude=pattern    Exclude files matching regex pattern\n";
+ 	print STDERR "  --version            Display version and exit\n";
+ 	print STDERR "  --help               Display this message and exit\n";
+ 	exit 1;
+@@ -122,12 +123,16 @@
+     #   else: no logic to handle file type
+     # end
+ 
+-    foreach $file (@files)
++    FILE_PROCESS: foreach $file (@files)
+     {
+ 	my $new_path       = "$cwd/$file";
+ 	my $today_path     = "$target/$today/$cwd/$file";
+ 	my $yesterday_path = "$target/$yesterday/$cwd/$file";
+ 
++	foreach my $exclude (@opt_exclude) {
++	    next FILE_PROCESS if ($new_path =~ $exclude);
++	}
++
+ 	if (-l $new_path) {
+ 	    symlink (readlink ($new_path), $today_path);
+ 	}
+@@ -153,7 +158,14 @@
+ 	}
+     }
+ 
+-    foreach (@dirs) { recurse ("$cwd/$_"); }
++    DIR_PROCESS: foreach (@dirs)
++    {
++	my $dir = "$cwd/$_";
++	foreach my $exclude (@opt_exclude) {
++	    next DIR_PROCESS if ($dir =~ $exclude);
++	}
++	recurse ($dir);
++    }
+ }
+ 
+ 

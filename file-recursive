@@ -1,0 +1,20 @@
+#! /bin/sh
+
+TARGET=$1
+
+if [ "$TARGET" == "" ]; then
+	echo "Usage: $0 target"
+	exit 1
+fi
+
+SIZE=`stat -c%s $TARGET`
+COUNT=0
+while [ $COUNT -lt $SIZE ]; do
+	START=`expr $SIZE - $COUNT`
+	TYPE=`tail -c $START $TARGET | file -b -`
+	if [ "$TYPE" != "" -a "$TYPE" != "data" ]; then
+		echo "`printf "0x%.8x\n" $COUNT`: $TYPE"
+	fi
+	COUNT=`expr $COUNT + 1`
+done
+
