@@ -1,0 +1,16 @@
+#! /bin/sh
+
+UPDATE_CHECKER_DIR=~/UpdateChecker
+MAIL_TO="replace-me-with@your-real-email.address"
+
+URL="${1}"
+URL_DIGEST=$(echo "${URL}" | md5sum | awk '{print $1}')
+URL_DIGEST_FILE="${UPDATE_CHECKER_DIR}/cache/${URL_DIGEST}.dat"
+CONTENT_OLD_DIGEST=$(cat ${URL_DIGEST_FILE})
+CONTENT_NEW_DIGEST=$(curl "${URL}" 2>/dev/null | grep -iv "rnhn" | md5sum | awk '{print $1}')
+
+if [ "${CONTENT_OLD_DIGEST}" != "${CONTENT_NEW_DIGEST}" ]; then
+	echo ${URL} | mail -s "UPDATE NOTIFICATION - ${URL}" "${MAIL_TO}"
+	echo "${CONTENT_NEW_DIGEST}" > ${URL_DIGEST_FILE}
+fi
+
