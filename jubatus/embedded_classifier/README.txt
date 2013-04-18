@@ -1,4 +1,1 @@
-Embedded (in-process) use of Jubatus classifier (0.4.0).
-
-TODO:
-* fv_converter support
+Embedded (in-process) use of Jubatus classifier driver (0.4.3).

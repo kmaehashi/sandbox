@@ -1,71 +1,63 @@
 /* Copyright (C) 2013 Kenichi Maehashi */
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
-#include <pficommon/lang/cast.h>
-#include <pficommon/text/json.h>
-
-#include <jubatus/classifier/classifier_base.hpp>
-#include <jubatus/classifier/classifier_factory.hpp>
-#include <jubatus/classifier/classifier_config.hpp>
+#include <jubatus/fv_converter/datum.hpp>
 #include <jubatus/classifier/classifier_type.hpp>
-#include <jubatus/common/type.hpp>
-#include <jubatus/common/jsonconfig/config.hpp>
-#include <jubatus/storage/storage_factory.hpp>
 
-using std::cout;
-using std::endl;
+#include "embedded_driver/classifier.hpp"
 
-using jubatus::classifier::classifier_base;
-using jubatus::classifier::classifier_factory;
-using jubatus::classifier::classifier_config;
-using jubatus::classify_result;
+using std::string;
+using std::make_pair;
+using std::vector;
+using std::pair;
+
+using jubatus::fv_converter::datum;
 using jubatus::classify_result_elem;
-using jubatus::sfv_t;
-using jubatus::jsonconfig::config;
-using jubatus::storage::storage_base;
-using jubatus::storage::storage_factory;
+using jubatus::classify_result;
 
-using pfi::lang::lexical_cast;
-using pfi::text::json::json;
+datum make_datum(const string& hair, const string& top, const string& bottom, double height) {
+  datum d;
+  d.string_values_.push_back(make_pair("hair", hair));
+  d.string_values_.push_back(make_pair("top", top));
+  d.string_values_.push_back(make_pair("bottom", bottom));
+
+  d.num_values_.push_back(make_pair("height", height));
+  return d;
+}
+
+void show_result(const classify_result result) {
+  for (classify_result::const_iterator it = result.begin(); it != result.end(); ++it) {
+    std::cout << "Label: " << it->label << " (Score: " << it->score << ")" << std::endl;
+  }
+}
 
 int main() {
-  // param
-  config param(lexical_cast<json>("{\"regularization_weight\": 1.0}"));
+  std::ifstream is("config.json");
+  std::stringstream ss;
+  ss << is.rdbuf();
+  is.close();
 
-  // storage
-  storage_base* storage = storage_factory::create_storage("local");
+  std::cout << "=== Config ===" << std::endl;
+  std::cout << ss.str() << std::endl;
+  std::cout << "==============" << std::endl;
 
-  // classifier
-  classifier_base* c =
-      classifier_factory::create_classifier("AROW", param, storage);
-
-  // fv
-  sfv_t d;
+  jubatus::embedded::classifier c(ss.str());
 
   // train
-  d.clear();
-  d.push_back(std::make_pair("A", 1));
-  d.push_back(std::make_pair("B", 1));
-  c->train(d, "tokugawa");
-  d.clear();
-  d.push_back(std::make_pair("B", 1));
-  d.push_back(std::make_pair("D", 1));
-  c->train(d, "ashikaga");
-  d.clear();
-  d.push_back(std::make_pair("A", 1));
-  d.push_back(std::make_pair("C", 1));
-  c->train(d, "hojo");
+  std::cout << "train" << std::endl;
+  c.train(make_pair("male", make_datum("short", "sweater", "jeans", 1.70)));
+  c.train(make_pair("female", make_datum("long", "shirt", "skirt", 1.56)));
+  c.train(make_pair("male", make_datum("short", "jacket", "chino", 1.65)));
+  c.train(make_pair("female", make_datum("short", "T shirt", "jeans", 1.72)));
+  c.train(make_pair("male", make_datum("long", "T shirt", "jeans", 1.82)));
+  c.train(make_pair("female", make_datum("long", "jacket", "skirt", 1.43)));
 
   // classify
-  classify_result scores;
-  d.clear();
-  d.push_back(std::make_pair("A", 1));
-  d.push_back(std::make_pair("D", 1));
-  c->classify_with_scores(d, scores);
-
-  for (classify_result::iterator it = scores.begin();
-      it != scores.end(); ++it) {
-    cout << "[" << it->label << " : " << it->score << "]" << endl;
-  }
+  std::cout << "classify 1" << std::endl;
+  show_result(c.classify(make_datum("short", "T shirt", "jeans", 1.81)));
+  std::cout << "classify 2" << std::endl;
+  show_result(c.classify(make_datum("long", "shirt", "skirt", 1.50)));
 }
