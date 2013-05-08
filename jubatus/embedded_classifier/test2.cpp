@@ -34,7 +34,7 @@ void show_result(const classify_result result) {
   }
 }
 
-int main() {
+int run() {
   std::ifstream is("config.json");
   std::stringstream ss;
   ss << is.rdbuf();
@@ -60,4 +60,10 @@ int main() {
   show_result(c.classify(make_datum("short", "T shirt", "jeans", 1.81)));
   std::cout << "classify 2" << std::endl;
   show_result(c.classify(make_datum("long", "shirt", "skirt", 1.50)));
+
+  return 0;
+}
+
+int main(int argc, char** argv) {
+  run();
 }

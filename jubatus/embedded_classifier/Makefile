@@ -1,2 +1,3 @@
 all:
-	g++ test.cpp embedded_driver/classifier.cpp -o test $(shell pkg-config --cflags --libs pficommon) $(shell pkg-config --cflags --libs jubatus) -ljubastorage -ljubaconverter -ljubatus_driver -ljubatus_classifier
+	gcc $(LDFLAGS) -Lembedded_driver test1.c -o test1 -ljubatus_embedded_classifier
+	g++ $(LDFLAGS) -Lembedded_driver test2.cpp -o test2 -ljubatus_embedded_classifier
