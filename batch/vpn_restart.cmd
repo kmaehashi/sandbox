@@ -6,7 +6,7 @@ set NETWORK_DRIVE_SHARE=kenichi
 set NETWORK_DRIVE_LETTER=U:
 
 :: ----------------------------------- ::
-echo MAEHASHI.NET VPN ^& Network Drive Service
+echo VPN ^& Network Drive Service
 echo.
 
 :: ----------------------------------- ::
