@@ -43,7 +43,7 @@ static const char* type2String(int state){
 
 void watcher(zhandle_t *zzh, int type, int state, const char *path,
              void* context) {
-  fprintf(stdout, "Watcher %s state = %s", type2String(type), state2String(state));
+  fprintf(stdout, "Watcher %s(%d) state = %s(%d)", type2String(type), type, state2String(state), state);
   if (path && strlen(path) > 0) {
     fprintf(stdout, " for path %s", path);
   }
@@ -54,5 +54,19 @@ int main(int argc, char** argv) {
   zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
   zoo_deterministic_conn_order(1);
   zhandle_t *zh = zookeeper_init(argv[1], watcher, 30000, 0, 0, 0);
+
+  int state = 0;
+  while(state != ZOO_CONNECTED_STATE) {
+    state = zoo_state(zh);
+    fprintf(stdout, "Waiting: state = %s(%d)\n", state2String(state), state);
+    ::sleep(1);
+  }
+  char buf[16];
+  int ret;
+  ret = zoo_create(zh, "/test", "value", 5, &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL, buf, 16);
+  if (ret != ZOK) {
+    fprintf(stdout, "zoo_create failed with error %d\n", ret);
+    ::exit(1);
+  }
   ::sleep(-1); // sleep forever
 }
