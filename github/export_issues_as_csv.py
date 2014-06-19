@@ -49,15 +49,20 @@ def do_print(repo, issues):
         else:
             milestone_title = ''
         created_user = i['user']['login']
+        if i['assignee']:
+            assigned_user = i['assignee']['login']
+        else:
+            assigned_user = ''
         title = i['title']
         labels = i.get('labels', None)
         if labels:
             labels_list = '|'.join(map(lambda x: x['name'], labels))
         else:
             labels_list = ''
+        created_at = i['created_at'].replace('T', ' ').replace('Z', '')
         # TODO more info
         # TODO replace with standard csv module
-        print '"%s","%s","%s","%s","%s","%s"' % (repo,issue_id, title, created_user, labels_list, milestone_title)
+        print (u'%s,"%s","%s","%s","%s","%s","%s","%s"' % (created_at, repo,issue_id, title, created_user, assigned_user, labels_list, milestone_title)).encode('utf-8')
 
 def fetch_issues_for(repo):
     issues = []
