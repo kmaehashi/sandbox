@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 TARGET=$1
 
@@ -7,14 +7,14 @@ if [ "$TARGET" == "" ]; then
 	exit 1
 fi
 
-SIZE=`stat -c%s $TARGET`
+SIZE=$(stat -c%s $TARGET)
+#SIZE=$(stat -f%z $TARGET) # for BSD
 COUNT=0
 while [ $COUNT -lt $SIZE ]; do
-	START=`expr $SIZE - $COUNT`
+	START=$(($SIZE - $COUNT))
 	TYPE=`tail -c $START $TARGET | file -b -`
 	if [ "$TYPE" != "" -a "$TYPE" != "data" ]; then
 		echo "`printf "0x%.8x\n" $COUNT`: $TYPE"
 	fi
-	COUNT=`expr $COUNT + 1`
+	COUNT=$(($COUNT + 1))
 done
-
