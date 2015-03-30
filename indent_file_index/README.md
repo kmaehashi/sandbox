@@ -2,7 +2,7 @@ Usage
 ===============
 
 ```
-find . | ./indent_file_index.py
+find . | sort | ./indent_file_index.py
 ```
 
 and that's it.
