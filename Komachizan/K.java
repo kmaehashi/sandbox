@@ -1,1 +1,1 @@
-enum K{_;{System.out.print(_(0,1,1,""));}String _(int S,int I,int _,String $){return 9<++I?$==($=S+_==100?$+'+':S-_==100?$+'-':$)?"":$+_+"=100\n":_(S,I,_*10+I,$)+_(S+_,I,I,$+'+'+_)+_(S-_,I,I,$+'-'+_);}}
+enum K{K;{System.out.print(x(0,1,1,""));}String x(int S,int I,int N,String $){return 9<++I?$==($=S+N==100?$+'+':S-N==100?$+'-':$)?"":$+N+"=100\n":x(S,I,N*10+I,$)+x(S+N,I,I,$+'+'+N)+x(S-N,I,I,$+'-'+N);}public static void main(String[]v){}}
