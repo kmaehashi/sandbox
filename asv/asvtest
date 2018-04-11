@@ -1,9 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-# This script runs ASV benchmark code directly.
-# See `asvlist` for details.
+import sys
 
-BENCHMARK_DIR="${1}"; shift
-BENCHMARK_ID="${1}"; shift
+import asv.benchmark
 
-python -m asv.benchmark run ${BENCHMARK_DIR} ${BENCHMARK_ID} True None /dev/stdout
+
+"""
+This script runs ASV benchmark code directly.
+See `asvlist` for details.
+"""
+
+
+if __name__ == '__main__':
+    assert 2 <= len(sys.argv)
+    benchmark_dir = sys.argv[1] if len(sys.argv) == 3 else 'benchmarks'
+    benchmark_id = sys.argv[-1]
+
+    run = asv.benchmark.commands['run']
+    run((benchmark_dir, benchmark_id, 'True', 'None', '/dev/stdout'))
