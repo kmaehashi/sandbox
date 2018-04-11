@@ -18,3 +18,4 @@ if __name__ == '__main__':
 
     run = asv.benchmark.commands['run']
     run((benchmark_dir, benchmark_id, 'True', 'None', '/dev/stdout'))
+    print('')
