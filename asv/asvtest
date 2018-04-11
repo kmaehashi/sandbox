@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# This script runs ASV benchmark code directly.
+# See `asvlist` for details.
+
+BENCHMARK_DIR="${1}"; shift
+BENCHMARK_ID="${1}"; shift
+
+python -m asv.benchmark run ${BENCHMARK_DIR} ${BENCHMARK_ID} True None /dev/stdout
