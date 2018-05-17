@@ -6,3 +6,4 @@ before_install:
 
 script:
     - ls
+    - exit 1
