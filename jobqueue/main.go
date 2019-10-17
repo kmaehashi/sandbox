@@ -20,6 +20,7 @@ func main() {
 			}, func(result interface{}, err error) {
 				fmt.Printf("CALLBACK: task %v (sleep %v)\n", i, result)
 			})
+			fmt.Printf("ADD     : task %v\n", i)
 		}(i)
 	}
 	fmt.Println("---- All tasks added, now waiting for tasks to complete...")

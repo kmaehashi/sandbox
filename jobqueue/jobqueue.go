@@ -27,12 +27,20 @@ type orderedJobQueue struct {
 // output callbacks is guranteed to be consistent.
 func New(workers int, capacity int) *orderedJobQueue {
 	queue := &orderedJobQueue{
-		waitingJobs:  make(chan *job, capacity),
+		// Waiting jobs queue is for jobs not yet invoked and waiting to be
+		// picked by the worker.
+		waitingJobs: make(chan *job, capacity),
+
+		// Finished jobs queue is for jobs invoked, completed and waiting
+		// to be picked by the callbacker.
 		finishedJobs: make(chan *job, capacity),
+
 		callbackLock: &sync.Mutex{},
 	}
 
 	// Launch workers.
+	// A worker picks a job from the waiting jobs queue, invoke it,
+	// then queue it to the finished jobs queue.
 	queue.workerGroup.Add(workers)
 	for i := 0; i < workers; i++ {
 		go func() {
@@ -49,7 +57,13 @@ func New(workers int, capacity int) *orderedJobQueue {
 		}()
 	}
 
-	// Launch callback invoker.
+	// Launch a callbacker.
+	// A callbacker picks a job from the finished jobs queue and perform
+	// callback.  If it is not possible to perform callback immedeately
+	// (in case some younger jobs are not completed yet), add it to the
+	// waiters list (TODO naming is a bit confusing) and retry when another
+	// job has completed.  Note that the size of the waiters list is not
+	// limited.
 	queue.callbackLock.Lock()
 	go func() {
 		defer queue.callbackLock.Unlock()
@@ -57,6 +71,7 @@ func New(workers int, capacity int) *orderedJobQueue {
 		// The initial job ID is 1.
 		callbackID := uint64(1)
 
+		// Dispatch the job if all younger jobs are already dispatched.
 		tryCallback := func(j *job) bool {
 			if j.id == callbackID {
 				j.callback(j.retval, j.reterr)
@@ -66,6 +81,7 @@ func New(workers int, capacity int) *orderedJobQueue {
 			return false
 		}
 
+		// Try to flush the waiters list.
 		flushWaiters := func(waiters *list.List) {
 			for e := waiters.Front(); e != nil; {
 				if tryCallback(e.Value.(*job)) {
@@ -78,15 +94,12 @@ func New(workers int, capacity int) *orderedJobQueue {
 		}
 
 		waiters := list.New()
-		defer func() {
-			flushWaiters(waiters)
-			if waiters.Len() != 0 {
-				panic(fmt.Errorf("failed to process some elements"))
-			}
-		}()
 		for {
 			j, ok := <-queue.finishedJobs
 			if !ok {
+				if waiters.Len() != 0 {
+					panic(fmt.Errorf("failed to callback some jobs"))
+				}
 				return
 			}
 			if tryCallback(j) {
