@@ -7,7 +7,7 @@ on:
     types: [labeled]
 
 env:
-  CUPY_AUTO_NOTIFY: {"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}
+  CUPY_AUTO_NOTIFY: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
 
 jobs:
   auto-notify:
