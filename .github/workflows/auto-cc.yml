@@ -9,11 +9,11 @@ on:
 
 jobs:
   auto-notify:
-    env:
-      CUPY_AUTO_NOTIFY: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
     if: |
         github.repository_owner == 'kmaehashi' &&
         contains('hip|array-api', github.event.label.name)
+    env:
+      NOTIFY_TARGETS: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
     runs-on: ubuntu-20.04
 
     steps:
@@ -22,7 +22,7 @@ jobs:
         id: fc
         with:
             issue-number: ${{ (github.event_name == 'issues' && github.event.issue.number) || github.event.pull_request.number }}
-            body-includes: "<!-- Added by CuPy Auto Notify Bot (${{ github.event.label.name }}) -->"
+            body-includes: "<!-- Added by Auto Notify Bot (${{ github.event.label.name }}) -->"
 
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v1
@@ -31,5 +31,5 @@ jobs:
             comment-id: ${{steps.fc.outputs.comment-id}}
             edit-mode: replace
             body: |
-                <!-- Added by CuPy Auto Notify Bot (${{ github.event.label.name }}) -->
-                cc/ ${{ fromJSON(env.CUPY_AUTO_NOTIFY)[github.event.label.name] }}
+                <!-- Added by Auto Notify Bot (${{ github.event.label.name }}) -->
+                cc/ ${{ fromJSON(env.NOTIFY_TARGETS)[github.event.label.name] }}
