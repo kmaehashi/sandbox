@@ -6,11 +6,11 @@ on:
   pull_request_target:
     types: [labeled]
 
-env:
-  CUPY_AUTO_NOTIFY: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
 
 jobs:
   auto-notify:
+    env:
+      CUPY_AUTO_NOTIFY: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
     if: |
         github.repository_owner == 'cupy' &&
         contains(${{ fromJSON(env.CUPY_AUTO_NOTIFY) }}, github.event.label.name)
