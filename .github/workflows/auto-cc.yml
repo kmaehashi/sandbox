@@ -13,7 +13,7 @@ jobs:
       CUPY_AUTO_NOTIFY: '{"hip": "@kmaehashi (hip)", "array-api": "@kmaehashi (array-api)"}'
     if: |
         github.repository_owner == 'cupy' &&
-        contains(["hip", "array-api"], github.event.label.name)
+        contains("hip|array-api", github.event.label.name)
     runs-on: ubuntu-20.04
 
     steps:
