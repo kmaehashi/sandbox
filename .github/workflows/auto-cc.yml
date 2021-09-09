@@ -13,7 +13,7 @@ jobs:
   auto-notify:
     if: |
         github.repository_owner == 'cupy' &&
-        contains(fromJSON(env.CUPY_AUTO_NOTIFY), github.event.label.name)
+        contains(${{ fromJSON(env.CUPY_AUTO_NOTIFY) }}, github.event.label.name)
     runs-on: ubuntu-20.04
 
     steps:
