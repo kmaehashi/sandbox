@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - run: |
-          echo ${{github.event}}
+          echo ${{toJSON(github.event)}}
 
   backport:
     if: |
