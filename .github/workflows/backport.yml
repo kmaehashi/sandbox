@@ -1,0 +1,34 @@
+name: "Backport"
+
+on:
+  pull_request_target:
+    types: [closed, labeled]
+    branches:
+       - master
+
+jobs:
+  backport:
+    if: |
+        github.repository_owner == 'kmaeahshi' &&
+        github.event.pull_request.merged == true &&
+        (
+            (github.event.action == 'closed'  && contains(github.event.pull_request.labels.*.name, 'to-be-backported')) or
+            (github.event.action == 'labeled' && github.event.label.name == 'to-be-backported')
+        )
+    runs-on: ubuntu-18.04
+    env:
+      CUPY_CI: GitHub
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    - name: setup backport
+      run: |
+        die
