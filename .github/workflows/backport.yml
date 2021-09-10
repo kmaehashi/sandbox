@@ -12,7 +12,7 @@ jobs:
         github.repository_owner == 'kmaeahshi' &&
         github.event.pull_request.merged == true &&
         (
-            (github.event.action == 'closed'  && contains(github.event.pull_request.labels.*.name, 'to-be-backported')) or
+            (github.event.action == 'closed'  && contains(github.event.pull_request.labels.*.name, 'to-be-backported')) ||
             (github.event.action == 'labeled' && github.event.label.name == 'to-be-backported')
         )
     runs-on: ubuntu-18.04
