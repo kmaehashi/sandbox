@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo ${{ fromJSON(github.event) }}
+        echo '${{ toJSON(github.event) }}'
 
   docker-build-push:
     runs-on: ubuntu-latest
