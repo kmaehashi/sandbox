@@ -13,7 +13,7 @@ jobs:
     steps:
     - run: |
         cat << _EOF_
-        ${{ github.event }}
+        ${{ fromJSON(github.event) }}
         _EOF_
 
   docker-build-push:
