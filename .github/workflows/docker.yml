@@ -1,0 +1,34 @@
+name: Docker
+
+on:
+  create:
+    tags:
+      - v*
+  pull_request:
+    paths:
+      - docker/**
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to DockerHub
+        if: github.event_name == 'create'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Push (docker/python3)
+        uses: docker/build-push-action@v2
+        with:
+          context: docker/python3
+          tags: kmaehashi/sandbox:latest
+          push: ${{ github.event_name == 'create' }}
+
+      - name: Docker Push (docker/rocm)
+        uses: docker/build-push-action@v2
+        with:
+          context: docker/rocm
+          tags: kmaehashi/sandbox:latest-2
+          push: ${{ github.event_name == 'create' }}
