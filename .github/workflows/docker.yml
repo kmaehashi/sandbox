@@ -1,9 +1,8 @@
 name: Docker
 
 on:
-  create:
-    tags:
-      - v*
+  release:
+    types: [published]
   pull_request:
     paths:
       - docker/**
