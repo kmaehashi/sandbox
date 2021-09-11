@@ -8,6 +8,14 @@ on:
       - docker/**
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - runs: |
+          cat << _EOF_
+          ${{ github.event }}
+          _EOF_
+
   docker-build-push:
     runs-on: ubuntu-latest
     steps:
