@@ -7,5 +7,5 @@ jobs:
   close:
     runs-on: self-hosted
     steps:
-    - run:
+    - run: |
       echo "hello world"
