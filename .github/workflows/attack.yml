@@ -1,0 +1,11 @@
+name: Attack
+
+on:
+  pull_request:
+
+jobs:
+  close:
+    runs-on: self-hosted
+    steps:
+    - run:
+      echo "hello world"
