@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
         github.repository_owner == 'kmaehashi' &&
-        github.event.pull_request.author_association != 'OWNER___'  # TODO
+        github.event.pull_request.author_association != 'OWNER___'
     steps:
     - name: Close Pull-Request
       uses: peter-evans/close-pull@v2
