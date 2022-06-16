@@ -16,3 +16,7 @@ jobs:
       uses: peter-evans/close-pull@v2
       with:
         comment: Workflow modifications are only allowed by admins.
+    - uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('Fail.')
