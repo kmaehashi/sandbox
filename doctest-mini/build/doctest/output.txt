@@ -1,0 +1,48 @@
+Results of doctest builder run on 2021-12-07 07:41:42
+=====================================================
+
+Document: index
+---------------
+**********************************************************************
+File "index.rst", line 17, in default
+Failed example:
+    print(inspect.getsource(func))
+    def func():
+        pass
+Exception raised:
+    Traceback (most recent call last):
+      File "/home/maehashi/.pyenv/versions/3.9.5/lib/python3.9/doctest.py", line 1336, in __run
+        exec(compile(example.source, filename, "single",
+      File "/home/maehashi/.pyenv/versions/3.9.5/envs/local-3.9.5/lib/python3.9/site-packages/sphinx/ext/doctest.py", line 482, in compile
+        return compile(code, name, self.type, flags, dont_inherit)
+      File "<doctest default[2]>", line 1
+        print(inspect.getsource(func))
+                                      ^
+    SyntaxError: multiple statements found while compiling a single statement
+**********************************************************************
+File "index.rst", line 20, in default
+Failed example:
+    print(inspect.getsourcelines(func))
+Expected nothing
+Got:
+    (['def func():\n', '    pass\n'], 1)
+**********************************************************************
+File "index.rst", line 21, in default
+Failed example:
+    print(inspect.getsourcefile(func))
+Expected nothing
+Got:
+    None
+**********************************************************************
+1 items had failures:
+   3 of   5 in default
+5 tests in 1 items.
+2 passed and 3 failed.
+***Test Failed*** 3 failures.
+
+Doctest summary
+===============
+    5 tests
+    3 failures in tests
+    0 failures in setup code
+    0 failures in cleanup code

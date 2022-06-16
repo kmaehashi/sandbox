@@ -17,8 +17,6 @@ Welcome to doctest-mini's documentation!
    ...     pass
    ...
    >>> print(inspect.getsource(func))
-   ... def func():
-   ...     pass
    >>> print(inspect.getsourcelines(func))
    >>> print(inspect.getsourcefile(func))
 
