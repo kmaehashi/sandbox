@@ -1,0 +1,22 @@
+name: Close Workflow Pull-Requests
+
+on:
+  pull_request_target:
+    paths:
+      - .github/**
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    if: |
+        github.repository_owner == 'kmaehashi' &&
+        github.event.pull_request.author_association != 'OWNER___'
+    steps:
+    - name: Close Pull-Request
+      uses: peter-evans/close-pull@v2
+      with:
+        comment: Workflow modifications are only allowed by admins.
+    - uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('Fail.')
