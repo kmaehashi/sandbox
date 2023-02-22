@@ -2,19 +2,23 @@
 
 # https://trading0.sbisec.co.jp/bff/fbonds/BffBuyOrderList.do?dayNightKbn=1
 
-import sys
 import csv
 import io
+import re
+import sys
 
 
 with open(sys.argv[1]) as f:
     data = f.read()
 
-data = data.replace('％\n約定数量', '％\n\n約定数量')
+data = re.sub('([%％－])\n約定数量', r'\1\n\n約定数量', data)
 
 mapping = {
     '残存期間': '残存年数',
-    '利率（外貨ベース）': '年率（税引前）',
+    '年率（税引前）': '利率',
+    '利率（外貨ベース）': '利率',
+    '利率(外貨ベース)': '利率',
+    '利回り（税引前）': '利回り',
     '発行体格付': '格付',
     '債券格付': '格付',
 }
@@ -46,8 +50,8 @@ w = csv.DictWriter(buf, [
     '残存年数',
     '初回コール日',
     '単価',
-    '年率（税引前）',
-    '利回り（税引前）',
+    '利率',
+    '利回り',
     '申込数量',
     '約定数量',
     '販売単位',
