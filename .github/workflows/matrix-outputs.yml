@@ -8,42 +8,37 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #os: ['linux', 'windows']
         os: ['linux']
         python: ['3.10', '3.11']
     env:
-      KEY: ${{ toJSON(matrix) }}
+      MATRIX: ${{ toJSON(matrix) }}
     steps:
     - run: |
-        VALUE="${RANDOM}"
-        echo "${KEY} = ${VALUE}"
-        jq -n --arg key "${KEY}" --arg value "${VALUE}" '{($key): ($value)}' > "$(echo "${KEY}" | base64).json"
+        LABEL="${RANDOM}"
+        jq -n --arg matrix "${MATRIX}" --arg label "${LABEL}" '{($MATRIX): ($LABEL)}' > "$(uuidgen).json"
     - uses: actions/upload-artifact@v3
       with:
-        name: matrix-outputs
+        name: matrix-labels
         path: '*.json'
         retention-days: 1
   reduce:
     needs: matrix1
     runs-on: ubuntu-latest
     outputs:
-      values: ${{ steps.values.outputs.values }}
+      labels: ${{ steps.output.outputs.labels }}
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: matrix-outputs
-    - id: values
+        name: matrix-labels
+    - id: output
       run: |
-        echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
+        echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
-    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[toJSON(matrix)] }}
+    runs-on: ${{ fromJSON(needs.reduce.outputs.labels)[toJSON(matrix)] }}
     strategy:
       matrix:
-        #os: ['linux', 'windows']
         os: ['linux']
         python: ['3.10', '3.11']
-    env:
-      VALUE: ${{ fromJSON(needs.reduce.outputs.values)[format('{0}-{1}', matrix.os, matrix.python)] }}
     steps:
-    - run: echo "${VALUE}"
+    - run: echo Hello!
