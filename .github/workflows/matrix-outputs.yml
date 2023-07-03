@@ -12,7 +12,8 @@ jobs:
         python: ['3.10', '3.11']
     steps:
     - run: |
-        KEY="${{ matrix.os }}-${{ matrix.python }}"
+        #KEY="${{ matrix.os }}-${{ matrix.python }}"
+        KEY="${{ toJSON(matrix) }}"
         VALUE="${RANDOM}"
         cat << _EOF_ > "$(echo ${KEY} | md5sum | awk '{print $1}').json"
         {"${KEY}": "${VALUE}"}
@@ -38,7 +39,7 @@ jobs:
         echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
-    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[format('{0}-{1}', matrix.os, matrix.python)] }}
+    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[toJSON(matrix)] }}
     strategy:
       matrix:
         os: ['linux', 'windows']
