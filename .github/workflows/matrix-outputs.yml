@@ -38,7 +38,7 @@ jobs:
         echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[format('{0}-{1}', matrix.os, matrix.python)] }}
     strategy:
       matrix:
         os: ['linux', 'windows']
