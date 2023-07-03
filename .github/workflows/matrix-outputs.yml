@@ -1,0 +1,15 @@
+name: Matrix Outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        - os: [linux, windows]
+        - python: [3.10, 3.11]
+    steps:
+    - runs: |
+        echo "${{ matrix.os }}, ${{ matrix.python }}"
