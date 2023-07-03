@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        - os: [linux, windows]
-        - python: [3.10, 3.11]
+        os: [linux, windows]
+        python: [3.10, 3.11]
     steps:
     - run: |
         echo "${{ matrix.os }}, ${{ matrix.python }}"
