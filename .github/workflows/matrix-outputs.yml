@@ -13,9 +13,10 @@ jobs:
         python: ['3.10', '3.11']
     steps:
     - run: |
-        #KEY="${{ matrix.os }}-${{ matrix.python }}"
-        KEY="${{ join(matrix.*, '|') }}"
+        echo "${{ join(matrix, '__') }}"
+        KEY="${{ join(matrix.*, '__') }}"
         VALUE="${RANDOM}"
+        jq --arg key "${{ join(matrix.*, '__') }}" --arg value "${RANDOM}"
         cat << _EOF_ > "$(echo ${KEY} | md5sum | awk '{print $1}').json"
         {"${KEY}": "${VALUE}"}
         _EOF_
