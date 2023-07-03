@@ -11,5 +11,5 @@ jobs:
         - os: [linux, windows]
         - python: [3.10, 3.11]
     steps:
-    - runs: |
+    - run: |
         echo "${{ matrix.os }}, ${{ matrix.python }}"
