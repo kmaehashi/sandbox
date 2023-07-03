@@ -8,8 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [linux, windows]
-        python: [3.10, 3.11]
+        os: ['linux', 'windows']
+        python: ['3.10', '3.11']
     steps:
     - run: |
-        echo "${{ matrix.os }}, ${{ matrix.python }}"
+        KEY="${{ matrix.os }}-${{ matrix.python }}"
+        VALUE="${RANDOM}"
+        cat << _EOF_ > "$(echo ${KEY} | md5sum | awk '{print $1}').json"
+        {"${KEY}": "${VALUE}"}
+        _EOF_
+    - uses: actions/upload-artifact@v3
+      with:
+        name: matrix-outputs
+        path: *.json
