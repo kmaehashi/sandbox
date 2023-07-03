@@ -11,15 +11,13 @@ jobs:
         #os: ['linux', 'windows']
         os: ['linux']
         python: ['3.10', '3.11']
+    env:
+      KEY: ${{ join(matrix.*, '__matrix__') }}
     steps:
     - run: |
-        echo "${{ join(matrix, '__') }}"
-        KEY="${{ join(matrix.*, '__') }}"
         VALUE="${RANDOM}"
-        jq --arg key "${{ join(matrix.*, '__') }}" --arg value "${RANDOM}"
-        cat << _EOF_ > "$(echo ${KEY} | md5sum | awk '{print $1}').json"
-        {"${KEY}": "${VALUE}"}
-        _EOF_
+        echo "${KEY} = ${VALUE}"
+        jq -n --arg key "${KEY}" --arg value "${VALUE}" '{($key): ($value)}' > "$(echo "${KEY}" | base64).json"
     - uses: actions/upload-artifact@v3
       with:
         name: matrix-outputs
@@ -36,12 +34,10 @@ jobs:
         name: matrix-outputs
     - id: values
       run: |
-        find .
-        jq -s add *.json
         echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
-    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[join(matrix.*, '|')] }}
+    runs-on: ${{ fromJSON(needs.reduce.outputs.values)[join(matrix.*, '__matrix__')] }}
     strategy:
       matrix:
         #os: ['linux', 'windows']
