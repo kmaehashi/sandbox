@@ -32,7 +32,7 @@ jobs:
       with:
         name: matrix-outputs
     - id: values
-      run:
+      run: |
         find .
         jq -s add *.json
         echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
