@@ -14,8 +14,8 @@ jobs:
       MATRIX: ${{ toJSON(matrix) }}
     steps:
     - run: |
-        LABEL="${RANDOM}"
-        jq -n --arg matrix "${MATRIX}" --arg label "${LABEL}" '{($matrix): ($label)}' > "$(uuidgen).json"
+        export LABEL="${RANDOM}"
+        jq -n '{(env.MATRIX): (env.LABEL)}' > "$(uuidgen).json"
     - uses: actions/upload-artifact@v3
       with:
         name: matrix-labels
@@ -25,14 +25,13 @@ jobs:
     needs: matrix1
     runs-on: ubuntu-latest
     outputs:
-      labels: ${{ steps.output.outputs.labels }}
+      labels: ${{ steps.labels.outputs.labels }}
     steps:
     - uses: actions/download-artifact@v3
       with:
         name: matrix-labels
-    - id: output
-      run: |
-        echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
+    - id: labels
+      run: echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
     runs-on: ${{ fromJSON(needs.reduce.outputs.labels)[toJSON(matrix)] }}
