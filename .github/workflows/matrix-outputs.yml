@@ -15,7 +15,7 @@ jobs:
     steps:
     - run: |
         LABEL="${RANDOM}"
-        jq -n --arg matrix "${MATRIX}" --arg label "${LABEL}" '{($MATRIX): ($LABEL)}' > "$(uuidgen).json"
+        jq -n --arg matrix "${MATRIX}" --arg label "${LABEL}" '{($matrix): ($label)}' > "$(uuidgen).json"
     - uses: actions/upload-artifact@v3
       with:
         name: matrix-labels
