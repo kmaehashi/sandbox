@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  main:
+  matrix1:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,3 +21,29 @@ jobs:
       with:
         name: matrix-outputs
         path: '*.json'
+        retention-days: 1
+  reduce:
+    needs: matrix1
+    runs-on: ubuntu-latest
+    outputs:
+      values: ${{ steps.values.outputs.values }}
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: matrix-outputs
+    - id: values
+      run:
+        find .
+        jq -s add *.json
+        echo "values=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
+  matrix2:
+    needs: reduce
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ['linux', 'windows']
+        python: ['3.10', '3.11']
+    env:
+      VALUE: ${{ fromJSON(needs.reduce.outputs.values)[format('{0}-{1}', matrix.os, matrix.python)] }}
+    steps:
+    - run: echo "${VALUE}"
