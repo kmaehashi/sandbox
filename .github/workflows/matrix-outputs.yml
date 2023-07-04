@@ -3,13 +3,6 @@ name: Matrix Outputs
 on:
   workflow_dispatch:
 
-env:
-  MATRIX: |
-    {
-      "os": ["linux"],
-      "python": ["3.10", "3.11"]
-    }
-
 jobs:
   matrix1:
     runs-on: ubuntu-latest
@@ -17,7 +10,9 @@ jobs:
       value1: "foo"
       value2: ${{ steps.x.outputs.x }}
     strategy:
-      matrix: ${{ fromJSON(env.MATRIX) }}
+      matrix:
+        os: ['linux']
+        python: ['3.10', '3.11']
     env:
       KEY: ${{ toJSON(matrix) }}
     steps:
@@ -48,6 +43,8 @@ jobs:
     needs: reduce
     runs-on: ${{ fromJSON(needs.reduce.outputs.labels)[toJSON(matrix)] }}
     strategy:
-      matrix: ${{ fromJSON(env.MATRIX) }}
+      matrix:
+        os: ['linux']
+        python: ['3.10', '3.11']
     steps:
     - run: echo Hello!
