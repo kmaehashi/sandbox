@@ -3,19 +3,29 @@ name: Matrix Outputs
 on:
   workflow_dispatch:
 
+env:
+  MATRIX: |
+    {
+      "os": ["linux"],
+      "python": ["3.10", "3.11"]
+    }
+
 jobs:
   matrix1:
     runs-on: ubuntu-latest
+    outputs:
+      value1: "foo"
+      value2: ${{ steps.x.outputs.x }}
     strategy:
-      matrix:
-        os: ['linux']
-        python: ['3.10', '3.11']
+      matrix: ${{ fromJSON(env.MATRIX) }}
     env:
-      MATRIX: ${{ toJSON(matrix) }}
+      KEY: ${{ toJSON(matrix) }}
     steps:
-    - run: |
+    - id: x
+      run: |
         export LABEL="${RANDOM}"
-        jq -n '{(env.MATRIX): (env.LABEL)}' > "$(uuidgen).json"
+        jq -n '{(env.KEY): (env.LABEL)}' > "$(uuidgen).json"
+        echo "x=${LABEL}" >> "$GITHUB_OUTPUT"
     - uses: actions/upload-artifact@v3
       with:
         name: matrix-labels
@@ -31,13 +41,13 @@ jobs:
       with:
         name: matrix-labels
     - id: labels
-      run: echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
+      run: |
+        echo "${{ toJSON(needs.matrix1.outputs) }}"
+        echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
   matrix2:
     needs: reduce
     runs-on: ${{ fromJSON(needs.reduce.outputs.labels)[toJSON(matrix)] }}
     strategy:
-      matrix:
-        os: ['linux']
-        python: ['3.10', '3.11']
+      matrix: ${{ fromJSON(env.MATRIX) }}
     steps:
     - run: echo Hello!
