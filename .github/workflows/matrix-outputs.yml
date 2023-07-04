@@ -6,9 +6,7 @@ on:
 jobs:
   matrix1:
     runs-on: ubuntu-latest
-    outputs:
-      value2: ${{ steps.x.outputs.x }}
-      ${{ steps.x.outputs.x }}: 1
+    outputs: ${{ steps.x.outputs.x }}
     strategy:
       matrix:
         os: ['linux']
