@@ -6,7 +6,6 @@ on:
 jobs:
   matrix1:
     runs-on: ubuntu-latest
-    outputs: ${{ steps.x.outputs.x }}
     strategy:
       matrix:
         os: ['linux']
@@ -18,7 +17,6 @@ jobs:
       run: |
         export LABEL="${RANDOM}"
         jq -n '{(env.KEY): (env.LABEL)}' > "$(uuidgen).json"
-        echo "x=${LABEL}" >> "$GITHUB_OUTPUT"
     - uses: actions/upload-artifact@v3
       with:
         name: matrix-labels
