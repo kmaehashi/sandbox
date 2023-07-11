@@ -1,7 +1,7 @@
 name: github script test
 
 on:
-  issue_comment:
+  workflow_dispatch:
 
 jobs:
   close:
