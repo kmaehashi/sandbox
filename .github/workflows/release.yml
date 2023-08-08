@@ -6,8 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-22.04
-    permissions:
-      contents: read
+    permissions: read-all
+    # contents: read
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
