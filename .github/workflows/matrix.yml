@@ -10,4 +10,4 @@ jobs:
         - owner: "user2"
     runs-on: ubuntu-latest
     steps:
-    - run: echo ${{ toJSON(matrix) }}
+    - run: echo '${{ toJSON(matrix) }}'
