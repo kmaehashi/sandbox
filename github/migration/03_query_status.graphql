@@ -1,0 +1,16 @@
+query ($id: ID!) {
+  node(id: $id) {
+    ... on Migration {
+      id
+      sourceUrl
+      migrationLogUrl
+      migrationSource {
+        name
+      }
+      state
+      warningsCount
+      failureReason
+      repositoryName
+    }
+  }
+}

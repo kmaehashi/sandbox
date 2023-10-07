@@ -1,0 +1,18 @@
+mutation startRepositoryMigration($sourceId: ID!, $ownerId: ID!, $sourceRepositoryUrl: URI!, $repositoryName: String!, $continueOnError: Boolean!, $gitArchiveUrl: String, $metadataArchiveUrl: String, $accessToken: String!, $githubPat: String, $skipReleases: Boolean, $targetRepoVisibility: String, $lockSource: Boolean) {
+  startRepositoryMigration(
+    input: {sourceId: $sourceId, ownerId: $ownerId, sourceRepositoryUrl: $sourceRepositoryUrl, repositoryName: $repositoryName, continueOnError: $continueOnError, gitArchiveUrl: $gitArchiveUrl, metadataArchiveUrl: $metadataArchiveUrl, accessToken: $accessToken, githubPat: $githubPat, skipReleases: $skipReleases, targetRepoVisibility: $targetRepoVisibility, lockSource: $lockSource}
+  ) {
+    repositoryMigration {
+      id
+      databaseId
+      migrationSource {
+        id
+        name
+        type
+      }
+      sourceUrl
+      state
+      failureReason
+    }
+  }
+}
