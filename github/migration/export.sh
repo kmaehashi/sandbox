@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Assumes GH_HOST (if GHES) and GH_TOKEN with org admin scope.
+# Assumes GH_HOST (if GHES) and GH_TOKEN (admin:org, repo).
 
 set -uex
 

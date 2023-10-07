@@ -2,7 +2,7 @@
 
 # Usage:
 #   ./import.sh https://ghe.example.com/srcorg/testrepo destorg testrepo https://web.example.com/git_archive.tar.gz https://web.example.com/meta_archive.tar.gz
-# Assumes GH_TOKEN with org admin scope.
+# Assumes GH_TOKEN (admin:org, delete_repo, repo, workflow).
 
 set -uex
 
