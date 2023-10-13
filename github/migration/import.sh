@@ -11,6 +11,7 @@ dest_org=$2
 dest_repo=$3
 archive_git=$4
 archive_meta=$5
+gh_token="${GH_TOKEN}"
 
 gh repo delete ${dest_org}/${dest_repo} || true
 
@@ -22,7 +23,7 @@ out_01=$(gh api graphql -fquery="$(cat 01_create_migration_source.graphql)" -Fna
 echo "${out_01}"
 mig_source_id=$(echo "${out_01}" | jq -r .data.createMigrationSource.migrationSource.id)
 
-out_02="$(gh api graphql -fquery="$(cat 02_start_repository_migration.graphql)" -FsourceId="${mig_source_id}" -FownerId="${dest_org_id}" -FsourceRepositoryUrl="${src_url}" -FrepositoryName="$(basename ${src_url})" -FcontinueOnError=true -FgitArchiveUrl="${archive_git}" -FmetadataArchiveUrl="${archive_meta}" -FaccessToken="${GH_TOKEN}" -FgithubPat="${GH_TOKEN}" -FskipReleases=false -FtargetRepoVisibility=private -FlockSource=false)"
+out_02="$(gh api graphql -fquery="$(cat 02_start_repository_migration.graphql)" -FsourceId="${mig_source_id}" -FownerId="${dest_org_id}" -FsourceRepositoryUrl="${src_url}" -FrepositoryName="$(basename ${src_url})" -FcontinueOnError=true -FgitArchiveUrl="${archive_git}" -FmetadataArchiveUrl="${archive_meta}" -FaccessToken="${gh_token}" -FgithubPat="${gh_token}" -FskipReleases=false -FtargetRepoVisibility=private -FlockSource=false)"
 
 echo "${out_02}"
 mig_id="$(echo "${out_02}" | jq -r .data.startRepositoryMigration.repositoryMigration.id)"
