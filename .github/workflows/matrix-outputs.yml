@@ -1,0 +1,46 @@
+name: Matrix Outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  matrix1:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ['linux']
+        python: ['3.10', '3.11']
+    env:
+      KEY: ${{ toJSON(matrix) }}
+    steps:
+    - id: x
+      run: |
+        export LABEL="${RANDOM}"
+        jq -n '{(env.KEY): (env.LABEL)}' > "$(uuidgen).json"
+    - uses: actions/upload-artifact@v3
+      with:
+        name: matrix-labels
+        path: '*.json'
+        retention-days: 1
+  reduce:
+    needs: matrix1
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ steps.labels.outputs.labels }}
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: matrix-labels
+    - id: labels
+      run: |
+        echo "${{ toJSON(needs.matrix1.outputs) }}"
+        echo "labels=$(jq -c -s add *.json)" >> "$GITHUB_OUTPUT"
+  matrix2:
+    needs: reduce
+    runs-on: ${{ fromJSON(needs.reduce.outputs.labels)[toJSON(matrix)] }}
+    strategy:
+      matrix:
+        os: ['linux']
+        python: ['3.10', '3.11']
+    steps:
+    - run: echo Hello!

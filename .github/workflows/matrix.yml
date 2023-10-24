@@ -1,0 +1,13 @@
+on: workflow_dispatch
+
+jobs:
+  my_job:
+    strategy:
+      matrix:
+        include:
+        - owner: "user1"
+          repos: ["x", "y"]
+        - owner: "user2"
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ toJSON(matrix) }}'

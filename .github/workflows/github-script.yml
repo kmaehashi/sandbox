@@ -1,0 +1,13 @@
+name: github script test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v6
+      with:
+        script: |
+          require("@octokit/auth-app");

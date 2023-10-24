@@ -1,0 +1,11 @@
+name: Dump
+
+on:
+  issue_comment:
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+    - run:
+        cat "${GITHUB_EVENT_PATH}"

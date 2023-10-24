@@ -1,0 +1,12 @@
+mutation createMigrationSource($name: String!, $url: String!, $ownerId: ID!, $type: MigrationSourceType!) {
+  createMigrationSource(
+    input: {name: $name, url: $url, ownerId: $ownerId, type: $type}
+  ) {
+    migrationSource {
+      id
+      name
+      url
+      type
+    }
+  }
+}
