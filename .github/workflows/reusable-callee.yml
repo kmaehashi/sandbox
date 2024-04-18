@@ -1,0 +1,14 @@
+name: Reusable Callee
+
+on:
+  workflow_call:
+    inputs:
+      keyword:
+        required: true
+        type: string
+
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Hello world"
