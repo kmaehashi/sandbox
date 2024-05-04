@@ -1,0 +1,21 @@
+on: workflow_dispatch
+
+jobs:
+  my_job:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+    steps:
+    - run:
+        echo "Hello World! 2" > hello-1.txt
+        echo "Hello World! 1" > hello-2.txt
+
+    - name: Generate artifact attestation
+      id: attestation
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: 'hello-*.txt'
+
+    - run: |
+        cat "${{ steps.attestation.outputs.bundle-path }}"
