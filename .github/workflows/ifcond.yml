@@ -1,0 +1,15 @@
+name: If condition
+
+on:
+  workflow_dispatch:
+
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+    - id: foo
+      run:
+        echo "backend=gcp2" >> "${GITHUB_OUTPUT}"
+    - if: steps.foo.outputs.backend == 'gcp'
+      run: echo "Yes"
+
