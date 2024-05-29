@@ -9,6 +9,6 @@ jobs:
     steps:
     - id: foo
       run:
-        echo "backend=gcp2" >> "${GITHUB_OUTPUT}"
+        echo "backend=gcp" >> "${GITHUB_OUTPUT}"
     - if: steps.foo.outputs.backend == 'gcp'
       run: echo "Yes"
