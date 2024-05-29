@@ -1,0 +1,13 @@
+name: Composite Action Example
+description: "Composite Action example"
+
+runs:
+  using: composite
+  steps:
+  - id: foo
+    run:
+      echo "backend=gcp2" >> "${GITHUB_OUTPUT}"
+    shell: bash
+  - if: steps.foo.outputs.backend == 'gcp'
+    run: echo "Yes"
+    shell: bash
