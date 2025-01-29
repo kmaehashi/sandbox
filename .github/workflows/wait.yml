@@ -2,6 +2,7 @@ name: Wait a minute
 
 on:
   issue_comment:
+  workflow_dispatch:
 
 jobs:
   wait-1-min:
