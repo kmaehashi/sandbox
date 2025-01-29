@@ -1,0 +1,22 @@
+name: Wait a minute
+
+on:
+  issue_comment:
+
+jobs:
+  wait-1-min:
+    environment: wait-a-minute
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo OK
+  wait-2-min:
+    needs: [wait-1-min]
+    environment: wait-a-minute
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo OK
+  main:
+    needs: [wait-2-min]
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo This job runs after 2 minutes.
