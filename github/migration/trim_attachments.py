@@ -76,9 +76,12 @@ def main():
     # Remove the removed attachments from the original list
     save_attachments_json(args.out_dir, [x[0] for x in attachments_with_size])
 
-    print("Now remove these files:")
+    print("Now run these commands:")
+    print(f"rm {args.meta_archive_dir}/attachments_*.json")
+    print(f"mv {args.out_dir}/attachments_*.json {args.meta_archive_dir}")
+    print("process() { rm $1; }")
     for attachment in removed_attachments_with_size:
-        print(attachment[1])
+        print('process', attachment[1])
 
 
 if __name__ == '__main__':
