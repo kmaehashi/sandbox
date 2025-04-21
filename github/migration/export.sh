@@ -18,7 +18,12 @@ cat << _EOF_ | gh api "/orgs/${src_org}/migrations" --input -
 _EOF_
 
 cat << _EOF_
-Wait, then download:
+Wait until the "state" becomes "exported":
+
+# gh api /orgs/${src_org}/migrations/\${MIGRATION_GIT_ID}
+# gh api /orgs/${src_org}/migrations/\${MIGRATION_META_ID}
+
+Then download:
 
 # gh api /orgs/${src_org}/migrations/\${MIGRATION_GIT_ID}/archive > git_archive.tar.gz
 # gh api /orgs/${src_org}/migrations/\${MIGRATION_META_ID}/archive > meta_archive.tar.gz
