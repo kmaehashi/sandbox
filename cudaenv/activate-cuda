@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -ue
+
+TARGET="${1:-}"
+TOOL_DIR="$(cd $(dirname "${0}"); pwd)"
+
+
+if [[ "${TARGET}" = "" ]]; then
+    echo "Usage: eval \$(activate-cuda VERSION)" >&2
+    echo "" >&2
+    echo "List of VERSION available:" >&2
+    for DIR in ${TOOL_DIR}/cuda-*; do
+        echo "$(basename $DIR)" >&2
+    done
+    exit 1
+else
+    CUDA_PATH="${TOOL_DIR}/${TARGET}"
+    if [[ -d "${CUDA_PATH}" ]]; then
+        echo "export CUDA_PATH=\"${CUDA_PATH}\""
+        echo "export PATH=\"${CUDA_PATH}/bin:\${PATH}\""
+        echo "export LD_LIBRARY_PATH=\"${CUDA_PATH}/lib64:\${LD_LIBRARY_PATH}\""
+    else
+        echo "Error: ${CUDA_PATH} not found" >&2
+        exit 2
+    fi
+fi
